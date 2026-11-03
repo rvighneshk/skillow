@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Visual explainer — {{ tutorial.title }} — Skillow{% endblock %}
+{% block content %}
+<div class="lesson-nav"><a href="/tutorials/{{ tutorial.id }}" class="button button-outline"><svg class="ui-icon" viewBox="0 0 24 24"><path d="M15 18 9 12l6-6"/></svg> Back to lesson</a><div class="lesson-nav-right"><span class="lesson-kind">ASK & VISUALIZE</span><span class="state state-completed">Saved learning</span></div></div>
+<section class="explainer-page">
+  <div class="explainer-heading"><span class="eyebrow">04 / ASK & VISUALIZE</span><h1>Ask it. See it. Understand it.</h1><p>Ask anything about <strong>{{ tutorial.title }}</strong>. Skillow answers using the lesson and creates a companion visual explanation in the same response.</p></div>
+  <section class="explainer-compose">
+    <form id="diagram-form">
+      <label for="diagram-prompt">Your question or concept</label>
+      {% if demo_question %}<button type="button" class="prompt-chip demo-question" data-target="diagram-prompt">{{ demo_question }}</button>{% endif %}
+      <input id="diagram-prompt" name="prompt" class="text-input" placeholder="Ask a question about this tutorial or a concept you want to understand." required maxlength="500">
+      <button class="button button-primary" type="submit">Get answer + visual</button>
+    </form>
+    <p class="ai-note">Answers distinguish tutorial evidence from general knowledge. Visuals are conceptual aids—not verified diagrams, measurements or safety instructions.</p><div id="diagram-result" class="diagram-result" aria-live="polite"></div>
+  </section>
+  {% if cached_explainers %}
+  <section class="saved-explainers"><div class="panel-heading"><div><span class="eyebrow">YOUR SAVED WORK</span><h2>Previously explored</h2><p class="section-subtitle">These illustrations are cached, so reopening them does not call the AI models again.</p></div></div>
+    {% for item in cached_explainers %}
+    <article class="saved-explainer"><div><h3>{{ item.prompt }}</h3><div class="markdown-content">{{ item.explanation }}</div><button type="button" class="audio-btn audio-read-markdown">▶ Read answer aloud</button></div><figure class="saved-figure"><img src="{{ item.image_url }}" alt="Instructional visual for {{ item.prompt }}"><figcaption>Illustrative visual only. It may simplify or misrepresent technical details; verify critical information against the tutorial and equipment instructions.</figcaption></figure></article>
+    {% endfor %}
+  </section>
+  {% endif %}
+</section>
+{% endblock %}
+{% block scripts %}<script>window.SKILLOW_TUTORIAL_ID={{ tutorial.id }};</script>{% endblock %}

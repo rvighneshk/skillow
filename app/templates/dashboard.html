@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Skillow — Learn by doing{% endblock %}
+{% block content %}
+<section class="home-hero">
+  <div class="home-hero-copy">
+    <div class="eyebrow"><span class="eyebrow-line"></span> THE HANDS-ON LEARNING STUDIO</div>
+    <h1>Turn what you watch<br>into what you <em>can do.</em></h1>
+    <p class="hero-description">Learn practical skills with AI-guided lessons. Understand each step, compare your own setup, and get a personalised guide you can follow at your pace.</p>
+    <div class="hero-actions">
+      <a class="button button-primary" href="#create-lesson"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Build a lesson</a>
+      <a class="button button-quiet" href="#how-it-works"><svg viewBox="0 0 24 24"><path d="M12 3v18m0 0 7-7m-7 7-7-7"/></svg> Explore how it works</a>
+    </div>
+    <div class="hero-proof"><span><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg> Video-to-lesson</span><span><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM8 9h8M8 13h5"/></svg> Personalised guidance</span><span><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/></svg> Ask as you learn</span></div>
+  </div>
+  <div class="hero-photo-grid">
+    <article class="photo-card photo-large">
+      <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1100&q=85" alt="Hands-on technical work at a workbench">
+      <div class="photo-shade"></div><span class="photo-tag">MAKE & REPAIR</span><div class="photo-caption"><b>Understand the process</b><small>Break complex tasks into clear moments</small></div>
+    </article>
+    <article class="photo-card photo-small photo-cooking">
+      <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=700&q=85" alt="Home cooking preparation">
+      <div class="photo-shade"></div><span class="photo-tag">COOK & CREATE</span>
+    </article>
+    <article class="photo-card photo-small photo-build">
+      <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=700&q=85" alt="Arts and crafts materials and creative workspace">
+      <div class="photo-shade"></div><span class="photo-tag">CRAFT & CREATE</span>
+    </article>
+    <div class="hero-floating-card"><span class="floating-icon"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM8 9h8M8 13h5"/></svg></span><div><b>Your learning, made personal</b><small>Video · Visuals · Guided steps</small></div></div>
+  </div>
+</section>
+
+<section class="create-section create-section-new" id="create-lesson">
+  <div class="section-intro">
+    <div class="eyebrow"><span class="eyebrow-line"></span> START WITH A VIDEO</div>
+    <h2>Bring a tutorial<br>into your workspace.</h2>
+    <p>Upload a practical how-to video. Skillow maps key moments, identifies tools and materials, and builds an interactive lesson you can explore.</p>
+    <div class="format-note"><span class="format-icon"><svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L7 9m5-5 5 5M4 16v3h16v-3"/></svg></span><span>MP4, MOV or M4V <b>·</b> Up to 250 MB</span></div>
+  </div>
+  <form class="create-card" action="/tutorials" method="post" enctype="multipart/form-data">
+    <div class="card-step"><span>NEW LESSON</span><span>01 / 02</span></div>
+    <label class="field-label" for="title">Give your lesson a name <span>OPTIONAL</span></label>
+    <input id="title" name="title" class="text-input" placeholder="e.g. Build a simple Arduino project">
+    <div class="video-input-tabs"><label><input type="radio" name="video_source_mode" value="upload" checked> Upload video</label><label><input type="radio" name="video_source_mode" value="url"> Direct video URL</label></div><div id="video-upload-field"><label class="dropzone" for="video" id="video-drop">
+      <span class="upload-symbol"><svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L7 9m5-5 5 5M4 16v3h16v-3"/></svg></span>
+      <b id="file-name">Drop your tutorial here</b>
+      <small>or <u>browse files</u> from your device</small>
+    </label>
+    <input id="video" class="sr-only" name="video" type="file" accept="video/mp4,video/quicktime,.m4v">
+    </div><div id="video-url-field" hidden><label class="field-label" for="video_url">Direct video URL</label><input id="video_url" name="video_url" class="text-input" type="url" placeholder="https://example.com/tutorial.mp4"><small class="field-help">Use a direct link to an MP4, MOV or M4V file—not a video webpage.</small></div>
+    <button class="button button-primary button-full" type="submit">Create interactive lesson <svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+    <div class="secure-note"><svg viewBox="0 0 24 24"><path d="M12 3 20 7v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="m8 12 3 3 5-6"/></svg> Your video is stored on this machine. Meta AI studies the full video where supported, or uses transcript and sampled-frame analysis.</div>
+  </form>
+</section>
+
+<section class="demo-library" id="try-examples">
+  <div class="section-heading demo-heading">
+    <div><div class="eyebrow"><span class="eyebrow-line"></span> TRY A GUIDED EXAMPLE</div><h2>Explore a skill.<br><em>See how it works.</em></h2><p>Three prepared learning journeys show how Skillow adapts across repair, cooking and electronics.</p></div>
+    <span class="demo-note">REPAIR · COOKING · ELECTRONICS</span>
+  </div>
+  <div class="demo-case-grid">
+    <article class="demo-case-card">
+      <div class="demo-case-image"><img src="{{ demo_cases.get('plumbing',{}).get('setup_image_url') or 'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1100&q=85' }}" alt="Under-sink plumbing repair"><span class="demo-case-number">01</span><span class="demo-case-tag">REPAIR & MAINTAIN</span></div>
+      <div class="demo-case-body"><div class="demo-case-kicker">PLUMBING · HOME REPAIR</div><h3>Understand an under-sink repair</h3><p>Follow the P-trap cleaning procedure, check the trap and slip-joint fittings, and compare your under-sink setup against the full sequence.</p><div class="demo-case-footer"><span class="demo-asset-state"><i></i>{% if demo_cases.get('plumbing',{}).get('video_url') %}Video + setup photo configured{% else %}Add tutorial video{% endif %}</span><form action="/demo/plumbing" method="post"><button class="button button-outline demo-config-link" type="submit" {% if not (demo_cases.get('plumbing',{}).get('video_url')) %}disabled title="Launch tutorial demo"{% endif %}>Launch example <svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></form></div></div>
+    </article>
+    <article class="demo-case-card">
+      <div class="demo-case-image"><img src="{{ demo_cases.get('cooking',{}).get('setup_image_url') or 'https://images.unsplash.com/photo-1556761223-4c4282c73f77?auto=format&fit=crop&w=1100&q=85' }}" alt="Cooking and food preparation"><span class="demo-case-number">02</span><span class="demo-case-tag">COOK & CREATE</span></div>
+      <div class="demo-case-body"><div class="demo-case-kicker">COOKING · FOOD PREPARATION</div><h3>Learn a cooking technique</h3><p>Study the Tamil cooking tutorial from preparation through cooking, compare your rice and pan situation, and learn the next safe technique.</p><div class="demo-case-footer"><span class="demo-asset-state"><i></i>{% if demo_cases.get('cooking',{}).get('video_url') %}Video + setup photo configured{% else %}Add tutorial video{% endif %}</span><form action="/demo/cooking" method="post"><button class="button button-outline demo-config-link" type="submit" {% if not (demo_cases.get('cooking',{}).get('video_url')) %}disabled title="Launch tutorial demo"{% endif %}>Launch example <svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></form></div></div>
+    </article>
+    <article class="demo-case-card">
+      <div class="demo-case-image"><img src="{{ demo_cases.get('arduino',{}).get('setup_image_url') or 'https://images.unsplash.com/photo-1553406830-ef2513450d76?auto=format&fit=crop&w=1100&q=85' }}" alt="Arduino electronics workbench"><span class="demo-case-number">03</span><span class="demo-case-tag">ELECTRONICS & CODING</span></div>
+      <div class="demo-case-body"><div class="demo-case-kicker">ARDUINO · ULTRASONIC SENSOR</div><h3>Explore an ultrasonic distance project</h3><p>Follow the Arduino ultrasonic distance project, understand the sensor-and-board sequence, and identify what still needs checking before powering the circuit.</p><div class="demo-case-footer"><span class="demo-asset-state"><i></i>{% if demo_cases.get('arduino',{}).get('video_url') and demo_cases.get('arduino',{}).get('setup_image_url') %}Video + setup photo configured{% else %}Configure demo assets{% endif %}</span><form action="/demo/arduino" method="post"><button class="button button-outline demo-config-link" type="submit" {% if not (demo_cases.get('arduino',{}).get('video_url')) %}disabled title="Launch Arduino demo"{% endif %}>Launch example <svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></form></div></div>
+    </article>
+  </div>
+  <p class="demo-setup-note">Each example opens its matching tutorial video and learner situation photo. Demo media is configured in config/demo_cases.json.</p>
+</section>
+
+<section class="library-section">
+  <div class="section-heading">
+    <div><div class="eyebrow"><span class="eyebrow-line"></span> YOUR LIBRARY</div><h2>Pick up where<br>you left off.</h2></div>
+    <div class="library-count"><b>{{ tutorials|length }}</b><span>LESSONS<br>CREATED</span></div>
+  </div>
+  {% if tutorials %}
+  <div class="lesson-grid">
+    {% for t in tutorials %}
+    <a class="lesson-card" href="/tutorials/{{ t.id }}">
+      <div class="lesson-card-art"><span class="lesson-card-index">{{ '%02d'|format(loop.index) }}</span><span class="lesson-card-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="lesson-card-category">VIDEO LESSON</span></div>
+      <div class="lesson-card-content"><div class="lesson-card-meta"><span>{{ t.created_at.strftime('%d %b %Y') }}</span><span class="state state-{{ t.status }}">{{ t.status }}</span></div><h3>{{ t.title }}</h3><p>{{ t.filename }}</p><span class="lesson-view">View lesson <svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-library"><div class="empty-mark"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div><div><h3>Your library is empty.</h3><p>Your first tutorial becomes your first interactive lesson. Start with a skill you want to understand.</p></div><a class="button button-outline" href="#create-lesson">Create your first lesson</a></div>
+  {% endif %}
+</section>
+
+<section class="how-section" id="how-it-works">
+  <div class="how-heading"><div class="eyebrow"><span class="eyebrow-line"></span> A DIFFERENT WAY TO LEARN</div><h2>From watching<br>to <em>understanding.</em></h2></div>
+  <div class="how-steps">
+    <article><span class="how-number">01</span><div class="how-icon"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div><h3>Break it down</h3><p>AI studies the tutorial and its spoken instructions to build a structured lesson with timestamped steps, tools, materials, checks and safety notes.</p></article>
+    <article><span class="how-number">02</span><div class="how-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 15 5-5 4 4 3-3 6 6"/></svg></div><h3>Make it yours</h3><p>Upload a photo and describe your situation. Skillow considers the complete tutorial, its sequence and safety notes alongside your current setup.</p></article>
+    <article><span class="how-number">03</span><div class="how-icon"><svg viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l1.8-3.1A7.5 7.5 0 1 1 20 11.5Z"/><path d="M9 11h.01M12.5 11h.01M16 11h.01"/></svg></div><h3>Ask as you go</h3><p>Ask questions at the moment you are watching. Get explanations grounded in video evidence and useful general knowledge.</p></article>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% macro mmss(sec) %}{{ '%d:%02d'|format((sec // 60)|int, (sec % 60)|int) }}{% endmacro %}
+{% macro entries(items, empty) %}
+{% if items %}<ul class="evidence-list">{% for item in items %}{% set text = item.get('text') if item is mapping else item %}{% set src = item.get('source') if item is mapping else '' %}<li><div class="markdown-content">{{ text }}</div>{% if src in ('reference', 'learner', 'both') %}<span class="src src-{{ src }}">{{ {'reference': 'Tutorial', 'learner': 'Your photo', 'both': 'Both'}[src] }}</span>{% elif src == 'inferred' %}<span class="src src-inferred">Inference</span>{% endif %}</li>{% endfor %}</ul>{% else %}<p class="quiet-copy">{{ empty }}</p>{% endif %}
+{% endmacro %}
+{% block title %}Your setup comparison — Skillow{% endblock %}
+{% block content %}
+{% set match = analysis.get('match') or {} %}
+{% set ref = analysis.get('tutorial_context') or {} %}
+{% set guide = analysis.get('repair_guide') or {} %}
+
+<div class="lesson-nav"><a href="/tutorials/{{ tutorial.id }}" class="button button-outline"><svg class="ui-icon" viewBox="0 0 24 24"><path d="M15 18 9 12l6-6"/></svg> Back to lesson</a><div class="lesson-nav-right"><span class="lesson-kind">PERSONALISED LEARNING</span><span class="state state-completed">Comparison ready</span></div></div>
+<section class="comparison-page">
+  <div class="comparison-page-heading"><div class="eyebrow"><span class="eyebrow-line"></span> YOUR REAL-WORLD SETUP</div><h1>See the differences.<br><em>Understand what to do next.</em></h1><p>{{ tutorial.title }} · Your setup reviewed against the complete tutorial, its sequence and instructions—not frame similarity.</p></div>
+
+  {% if analysis.get('stop_triggered') %}<div class="stop-banner" role="alert"><b>Pause and get qualified help</b><p>{{ analysis.get('stop_reason') or 'A safety trigger applies to this situation.' }}</p></div>{% endif %}
+
+  <section class="comparison-report comparison-report-page">
+    <div class="report-heading"><span class="eyebrow">WHOLE-TUTORIAL REVIEW</span><h2>Your progress, checked against the full procedure</h2><div class="markdown-content">{{ analysis.get('plain_language_summary', 'A comparison of your situation and the tutorial sequence.') }}</div>
+    {% if analysis.get('review_mode') != 'full_video_plus_structured_lesson' %}<p class="review-limit-note">Direct full-video review was unavailable for this run. Skillow used all extracted lesson stages and the available transcript; check visual details against the original video.</p>{% endif %}
+    </div>
+    <section class="procedure-timeline" aria-label="Complete tutorial sequence">
+      <div class="timeline-heading"><span class="eyebrow">UNDERSTAND · COMPLETE PROCEDURE</span><h3>The tutorial, in order</h3><p>Every extracted stage is shown here. This sequence—not a single matched frame—is the comparison reference.</p></div>
+      <ol>
+        {% for step in lesson.get('steps', []) %}
+        <li>
+          <span class="timeline-number">{{ '%02d'|format(step.step_number) }}</span>
+          <div class="timeline-content">
+            <div class="timeline-title"><h4>{{ step.title }}</h4><span class="phase-chip">{{ step.phase }}</span></div>
+            <div class="markdown-content">{{ step.instruction }}</div>
+            {% if step.get('spoken_instruction') %}<div class="timeline-spoken"><b>Spoken instruction:</b><div class="markdown-content">{{ step.spoken_instruction }}</div></div>{% endif %}
+            {% if step.get('expected_outcome') %}<div class="timeline-outcome"><b>Expected outcome:</b><div class="markdown-content">{{ step.expected_outcome }}</div></div>{% endif %}
+            {% if step.get('verification_check') %}<div class="timeline-outcome"><b>Check:</b><div class="markdown-content">{{ step.verification_check }}</div></div>{% endif %}
+            <div class="timeline-meta">
+              {% for item in step.get('tools_used', []) %}<span>Tool · {{ item }}</span>{% endfor %}
+              {% for item in step.get('materials_used', []) %}<span>Material · {{ item }}</span>{% endfor %}
+              {% for item in step.get('safety', []) %}<span class="timeline-safety">Safety · {{ item }}</span>{% endfor %}
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+      </ol>
+    </section>
+    <div class="comparison-images comparison-images-large">
+      <figure><small>YOUR SITUATION PHOTO</small><img src="{{ analysis.get('learner_overlay_url') or analysis.get('photo_url', '') }}" data-plain="{{ analysis.get('photo_url', '') }}" data-overlay="{{ analysis.get('learner_overlay_url') or '' }}" alt="Your current setup"></figure>
+    </div>
+    {% if analysis.get('learner_overlay_url') %}
+    <label class="overlay-toggle"><input type="checkbox" id="overlay-toggle" checked> Show supplementary SAM object detections. These do not verify correctness or safety.</label>
+    {% endif %}
+    <div class="evidence-grid">
+      <article class="evidence-block block-learner"><span class="block-tag">YOUR PROGRESS</span><h3>What you have already done</h3><div class="markdown-content">{{ analysis.get('learner_summary') or 'The photo and description did not establish a clear progress summary.' }}</div>
+        {% if analysis.get('what_already_done') %}<ul>{% for item in analysis.what_already_done %}<li><div class="markdown-content">{{ item }}</div></li>{% endfor %}</ul>{% endif %}
+      </article>
+      <article class="evidence-block block-tutorial"><span class="block-tag">UNDERSTAND</span><h3>What the complete tutorial teaches</h3><div class="markdown-content">{{ (analysis.get('whole_tutorial_review') or {}).get('tutorial_overview') or ref.get('summary') or 'The structured lesson is the reference.' }}</div></article>
+    </div>
+    <div class="report-heading verify-heading"><span class="eyebrow">VERIFY · EVIDENCE AUDIT</span><h2>What the evidence supports</h2><p>Claims below are checked against the learner photo and the tutorial procedure. Unknowns remain explicit.</p></div>
+    <div class="report-columns three">
+      <div class="report-section report-correct"><span class="block-tag">01 · CORRECT</span><h3>What is already right</h3>{{ entries(analysis.get('correct'), 'No confirmed correct elements could be established.') }}</div>
+      <div class="report-section report-different"><span class="block-tag">02 · DIFFERENCES</span><h3>What differs from the tutorial</h3>{{ entries(analysis.get('differences'), 'No specific difference was established.') }}</div>
+      <div class="report-section report-missing"><span class="block-tag">03 · CHECK</span><h3>What is missing or incorrect</h3>{{ entries(analysis.get('missing_or_incorrect') or analysis.get('missing'), 'No missing item was confidently identified.') }}</div>
+    </div>
+    <div class="whole-tutorial-card">
+      <div class="whole-tutorial-head"><span class="eyebrow">DECIDE · NEXT ACTION</span><span class="whole-review-badge">{{ 'Full video + lesson' if analysis.get('review_mode') == 'full_video_plus_structured_lesson' else 'Lesson + transcript' }}</span></div>
+      <div class="markdown-content decision-action">{{ analysis.get('next_step') or guide.get('overview') or 'Review the relevant lesson step before proceeding.' }}</div>
+      {% if analysis.get('why_next_step_matters') %}<div class="markdown-content">{{ analysis.get('why_next_step_matters') }}</div>{% endif %}
+    </div>
+    <div class="unknown-box"><b>What cannot be verified from this photo</b>
+      {% if analysis.get('unknowns') %}<ul>{% for item in analysis.unknowns %}<li><div class="markdown-content">{{ item }}</div></li>{% endfor %}</ul>{% else %}<p>A still photo cannot prove hidden connections, internal conditions, measurements or successful operation.</p>{% endif %}
+    </div>
+    <div class="safety-inline-box"><b>Safety requirements</b>
+      {% if analysis.get('safety_requirements') %}<ul>{% for item in analysis.safety_requirements %}<li><div class="markdown-content">{{ item }}</div></li>{% endfor %}</ul>{% endif %}
+      <div class="markdown-content">{{ analysis.get('safety_note', 'Visual similarity does not confirm compatibility or safe operation.') }}</div>
+    </div>
+  </section>
+
+  {% if analysis.get('trace') %}
+  <section class="agent-trace"><div class="report-heading"><span class="eyebrow">HOW SKILLOW CHECKED THIS</span><h2>Plan, verify, decide</h2></div>
+    <ol>{% for t in analysis.trace %}<li><span class="trace-phase tp-{{ t.phase|lower }}">{{ t.phase }}</span><div><b>{{ t.title }}</b>{% if t.detail %}<small>{{ t.detail }}</small>{% endif %}</div></li>{% endfor %}</ol>
+  </section>
+  {% endif %}
+
+  {% if guide.get('steps') or guide.get('overview') %}
+  <section class="repair-guide-card comparison-guide-page" id="repair-guide">
+    <div class="guide-header"><div><span class="eyebrow">STEP 3 · YOUR PERSONALISED GUIDE</span><h2>{{ guide.get('title', 'A guide for your setup') }}</h2><div class="markdown-content">{{ guide.get('overview', '') }}</div></div><span class="guide-badge">AI RECOMMENDATION</span></div>
+    <p class="basis-legend"><span class="basis-tag b-tutorial">From the tutorial</span> follows the video · <span class="basis-tag b-adapted">Adapted</span> changed for your setup · <span class="basis-tag b-general">General</span> general knowledge. The written steps are the primary guidance.</p>
+    <div class="guide-audio-toolbar"><div><b>Listen & work step by step</b><small>Uses your browser's text-to-speech voice.</small></div><div class="audio-actions"><button type="button" class="audio-btn audio-play-all" id="guide-play-all">▶ Play all</button><button type="button" class="audio-btn audio-stop" id="guide-stop" disabled>■ Stop</button></div></div>
+    {% if guide.get('prerequisites') %}<div class="guide-prereqs"><b>Before you start</b><ul>{% for item in guide.prerequisites %}<li><div class="markdown-content">{{ item }}</div></li>{% endfor %}</ul></div>{% endif %}
+    <div class="guide-steps">{% for step in guide.get('steps', []) %}<article class="guide-step" data-guide-step="{{ loop.index0 }}"><div class="guide-step-head"><span class="guide-step-number">{{ '%02d'|format(loop.index) }}</span><div><h4>{{ step.get('title', 'Step ' ~ loop.index) }}</h4><span class="basis-tag b-{{ step.get('basis', 'adapted') }}">{{ {'tutorial': 'From the tutorial', 'adapted': 'Adapted', 'general': 'General'}[step.get('basis', 'adapted')] }}</span>{% if step.get('confidence') %}<span class="confidence-tag">{{ step.confidence }} confidence</span>{% endif %}</div><button type="button" class="audio-btn audio-one" data-speak="{{ loop.index0 }}">Listen</button></div><div class="markdown-content guide-instruction">{{ step.get('instruction', '') }}</div>{% if step.get('why_it_matters') %}<div class="why-box"><b>Why this matters</b><div class="markdown-content">{{ step.why_it_matters }}</div></div>{% endif %}{% if step.get('check_before_next_step') %}<div class="check-box"><b>Before moving on</b><div class="markdown-content">{{ step.check_before_next_step }}</div></div>{% endif %}{% if step.get('related_video_timestamp_seconds') is not none %}<a class="guide-timestamp" href="/tutorials/{{ tutorial.id }}?t={{ step.related_video_timestamp_seconds }}#video">Watch the related moment · {{ mmss(step.related_video_timestamp_seconds) }}</a>{% endif %}</article>{% endfor %}</div>
+    {% if guide.get('stop_conditions') %}<div class="guide-stop"><b>Stop and get professional help if…</b><ul>{% for item in guide.stop_conditions %}<li><div class="markdown-content">{{ item }}</div></li>{% endfor %}</ul></div>{% endif %}
+    <p class="guide-disclaimer">Skillow provides learning support, not professional inspection or certification. Verify materials, quantities, specifications and safety before proceeding.</p>
+  </section>
+  {% endif %}
+</section>
+{% endblock %}
+{% block scripts %}<script>window.SKILLOW_GUIDE_STEPS={{ (analysis.get('repair_guide') or {}).get('steps', [])|tojson }};</script>{% endblock %}

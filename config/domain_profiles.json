@@ -1,0 +1,30 @@
+{
+  "plumbing": {
+    "label": "plumbing and home repair",
+    "sam_defaults": ["pipe", "pipe fitting", "valve", "wrench"],
+    "focus": "pipe type and material, fitting or joint type, connection method, shut-off valves, leak location, tools",
+    "stop_triggers": ["gas pipework", "mains electrical near water", "pressurised or high-pressure systems", "concealed or structural pipework", "a major leak or flooding", "no working shut-off valve"],
+    "guide_note": "Always isolate the water supply before opening any joint."
+  },
+  "cooking": {
+    "label": "cooking and food preparation",
+    "sam_defaults": ["food ingredient", "bowl", "utensil", "baking tray"],
+    "focus": "ingredients, quantities, stage of preparation, texture and layering, equipment, food hygiene and allergens",
+    "stop_triggers": ["raw meat, poultry or egg cross-contamination risk", "unknown allergens for a guest", "undercooked high-risk food"],
+    "guide_note": "Check allergens, raw-food handling and safe temperatures where relevant."
+  },
+  "electronics": {
+    "label": "electronics and Arduino",
+    "sam_defaults": ["Arduino board", "LED", "resistor", "jumper wire"],
+    "focus": "component identity, polarity, pin connections, power isolation, breadboard layout, code upload",
+    "stop_triggers": ["mains voltage", "swollen or hot batteries", "burning smell or visible damage", "unknown power source"],
+    "guide_note": "Disconnect power before changing any wiring and check component polarity."
+  },
+  "general": {
+    "label": "hands-on skills",
+    "sam_defaults": ["main object", "tool", "material", "component"],
+    "focus": "tools, materials, workpiece state, the stage of the process, anything that differs from the tutorial",
+    "stop_triggers": ["gas, mains electrical, pressurised or structural work", "anything that risks injury"],
+    "guide_note": "Verify materials, measurements and safety before starting."
+  }
+}

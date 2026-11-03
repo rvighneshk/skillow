@@ -1,0 +1,26 @@
+{
+  "arduino": {
+    "title": "Arduino Ultrasonic Distance Project",
+    "category": "Electronics & coding",
+    "video_url": "https://raw.githubusercontent.com/rvighneshk/skillow/refs/heads/main/assets/arduino.mp4",
+    "setup_image_url": "https://raw.githubusercontent.com/rvighneshk/skillow/refs/heads/main/assets/arduino.png",
+    "description": "Learner setup photo: Arduino Uno, breadboard, ultrasonic distance sensor, jumper wires and a paper target. Tutorial: ultrasonic distance measurement.",
+    "domain": "electronics"
+  },
+  "plumbing": {
+    "title": "How to Clean a P-Trap",
+    "category": "Repair & maintain",
+    "video_url": "https://raw.githubusercontent.com/rvighneshk/skillow/refs/heads/main/assets/plumbing.mp4",
+    "setup_image_url": "https://raw.githubusercontent.com/rvighneshk/skillow/refs/heads/main/assets/plumbing.png",
+    "description": "Learner setup photo: under-sink P-trap and slip-joint connections. Tutorial: safely removing, cleaning and reinstalling a P-trap.",
+    "domain": "plumbing"
+  },
+  "cooking": {
+    "title": "Tamil Cooking Tutorial",
+    "category": "Cook & create",
+    "video_url": "https://raw.githubusercontent.com/rvighneshk/skillow/refs/heads/main/assets/cooking.mp4",
+    "setup_image_url": "https://raw.githubusercontent.com/rvighneshk/skillow/refs/heads/main/assets/cooking.png",
+    "description": "Learner setup photo: rice cooking in a pan with liquid and vegetables. Tutorial: Tamil-style rice preparation and cooking sequence.",
+    "domain": "cooking"
+  }
+}
